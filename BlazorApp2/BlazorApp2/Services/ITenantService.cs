@@ -7,6 +7,6 @@ namespace BlazorApp2.Services
         Tenant GetTenant();
         string GetTenantConnectionString();
         string GetTenantId();
-        void SetTenant(string tenant);
+        Task SetTenant(string tenant);
     }
 }

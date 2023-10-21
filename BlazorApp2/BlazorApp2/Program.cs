@@ -25,7 +25,7 @@ builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAu
 builder.Services.AddScoped<TenantMiddleware> ();
 builder.Services.AddTransient<IProductServices, ProductServices>();
 
-builder.Services.AddScoped<TenantService>();
+builder.Services.AddScoped<ITenantService, TenantService>();
 
 builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
     .AddIdentityCookies();

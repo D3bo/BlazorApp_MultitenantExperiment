@@ -6,28 +6,22 @@ namespace BlazorApp2.Services
     public class TenantService : ITenantService
     {
 
-        private List<Tenant> _tenantList = new List<Tenant>()
-        {
-            new Tenant
-            {
-                TenantId="Default",
-                ConnectionString=""
-            },
-    new Tenant{
-        TenantId="Gio",
-                ConnectionString=""
-        } };
+        private readonly ApplicationDbContext _applicationDbContext;
 
+        public TenantService(ApplicationDbContext applicationDbContext)
+        {
+            _applicationDbContext = applicationDbContext;
+        }
 
         private Tenant Tenant { get; set; }
 
 
-        public string GetTenantId() => Tenant == null ? string.Empty : Tenant.TenantId;
+        public string GetTenantId() => Tenant == null ? string.Empty : Tenant.Identifier;
 
 
-        public void SetTenant(string tenant)
+        public async Task SetTenant(string tenant)
         {
-            Tenant = _tenantList.FirstOrDefault(x => x.TenantId == tenant);
+            Tenant = await _applicationDbContext.Tenants.FirstOrDefaultAsync(t => t.Identifier == tenant);
         }
 
         public Tenant GetTenant() => Tenant;

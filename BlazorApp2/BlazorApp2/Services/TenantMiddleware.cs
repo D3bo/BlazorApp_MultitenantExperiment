@@ -6,9 +6,9 @@ namespace BlazorApp2.Services
 {
     public class TenantMiddleware : IMiddleware
     {
-        private readonly TenantService _tenantService;
+        private readonly ITenantService _tenantService;
 
-        public TenantMiddleware(TenantService tenantService)
+        public TenantMiddleware(ITenantService tenantService)
         {
             _tenantService = tenantService;
         }

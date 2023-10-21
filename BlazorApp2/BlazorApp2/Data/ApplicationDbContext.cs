@@ -5,27 +5,38 @@ using Microsoft.Extensions.Options;
 
 namespace BlazorApp2.Data
 {
-    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options);
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :base(options)
+        {
+            
+        }
+
+        public DbSet<Tenant> Tenants { get; set; }
+
+
+
+
+    }
+        
+        
 
     public class SingleDbContext : DbContext
     {
 
         private readonly string _tenantId = string.Empty;
 
-        public SingleDbContext(DbContextOptions<SingleDbContext> options, TenantService tenantService) : base(options)
+        public SingleDbContext(DbContextOptions<SingleDbContext> options, ITenantService tenantService) : base(options)
         {
             _tenantId = tenantService.GetTenantId();
 
         }
 
-        // public DbSet<Tenant> Tenants { get; set; }
+       
         public DbSet<Product> Products { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
-        {
-            //builder.Entity<Tenant>()
-            //    .HasKey(t => t.TenantId);
-
+        {         
             builder.Entity<Product>()
                 .HasQueryFilter(p => p.TenantId == _tenantId);
 

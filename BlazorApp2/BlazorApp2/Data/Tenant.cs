@@ -4,9 +4,8 @@ namespace BlazorApp2.Data
 {
     public class Tenant
     {
-
-        public string TenantId { get; set; } = string .Empty;
-        public string Name { get; set; } = default!;
+        public int Id { get; set; } 
+        public string Identifier { get; set; } = default!;
         public string ConnectionString { get; set; } =string.Empty;
     }
 }

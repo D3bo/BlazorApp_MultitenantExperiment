@@ -6,9 +6,9 @@ namespace BlazorApp2.Services
     public class ProductServices : IProductServices
     {
         private readonly SingleDbContext _context;
-        private readonly TenantService _tenantService;
+        private readonly ITenantService _tenantService;
 
-        public ProductServices(SingleDbContext dbContext, TenantService tenantService)
+        public ProductServices(SingleDbContext dbContext, ITenantService tenantService)
         {
             _context = dbContext;
             _tenantService = tenantService;
