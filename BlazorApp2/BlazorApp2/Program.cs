@@ -2,6 +2,7 @@ using BlazorApp2.Client.Pages;
 using BlazorApp2.Components;
 using BlazorApp2.Data;
 using BlazorApp2.Identity;
+using BlazorApp2.Services;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -9,22 +10,32 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddControllers();
+
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<UserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
+builder.Services.AddScoped<TenantMiddleware> ();
+builder.Services.AddTransient<IProductServices, ProductServices>();
+
+builder.Services.AddScoped<TenantService>();
 
 builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
     .AddIdentityCookies();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(connectionString));
+
+builder.Services.AddDbContextFactory<SingleDbContext>(opts => opts.UseSqlite(connectionString), ServiceLifetime.Scoped);
+builder.Services.AddDbContext<ApplicationDbContext>(o=>o.UseSqlite(connectionString));
+
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -50,6 +61,8 @@ else
 
 app.UseHttpsRedirection();
 
+app.UseMiddleware<TenantMiddleware>();
+
 app.UseStaticFiles();
 app.UseAntiforgery();
 
@@ -60,5 +73,7 @@ app.MapRazorComponents<App>()
 
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
+
+app.MapControllers();
 
 app.Run();
