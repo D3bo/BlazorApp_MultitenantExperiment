@@ -44,4 +44,18 @@ namespace BlazorApp2.Data
         }
     }
 
+    public class MultipleDbcontext : DbContext
+    {
+
+
+        public MultipleDbcontext(DbContextOptions<MultipleDbcontext> options) : base(options)
+        {
+
+
+        }
+
+        DbSet<Customer> Customers { get; set; }
+        
+    }
+
 }

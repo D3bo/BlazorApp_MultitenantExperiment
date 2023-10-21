@@ -31,14 +31,23 @@ builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
     .AddIdentityCookies();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseSqlite(connectionString));
 
 builder.Services.AddDbContextFactory<SingleDbContext>(opts => opts.UseSqlite(connectionString), ServiceLifetime.Scoped);
-builder.Services.AddDbContext<ApplicationDbContext>(o=>o.UseSqlite(connectionString));
+builder.Services.AddDbContextFactory<MultipleDbcontext>((sp, op) =>
+{
+    var ts = sp.GetRequiredService<ITenantService>();
+    var tenantcs = ts.GetTenantConnectionString();
+    op.UseSqlite(tenantcs);
+});
+
+
 
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddSignInManager()
     .AddDefaultTokenProviders();

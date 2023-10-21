@@ -8,5 +8,7 @@ namespace BlazorApp2.Services
         string GetTenantConnectionString();
         string GetTenantId();
         Task SetTenant(string tenant);
+
+        Task<List<Tenant>> GetTenants();
     }
 }
