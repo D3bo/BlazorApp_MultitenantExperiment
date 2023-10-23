@@ -50,14 +50,14 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 //TODO gestire sia authenticazione api che razor
 builder.Services
-    .AddIdentityApiEndpoints<ApplicationUser>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme); // con questo non funziona authorizeView
+   .AddIdentityApiEndpoints<ApplicationUser>()
+   .AddEntityFrameworkStores<ApplicationDbContext>();
+//builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme); // con questo non funziona authorizeView
 
 
 builder.Services.AddAuthorization();
 
-// add cookie and Bearer authentication
+
 
 builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true) 
     .AddRoles<IdentityRole>()
@@ -88,8 +88,7 @@ else
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
-app.UseAuthorization();
+
 
 
 app.UseMiddleware<TenantMiddleware>();
