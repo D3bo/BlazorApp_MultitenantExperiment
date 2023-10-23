@@ -49,13 +49,12 @@ builder.Services.AddDbContextFactory<MultipleDbcontext>((sp, op) =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 //TODO gestire sia authenticazione api che razor
-builder.Services
-   .AddIdentityApiEndpoints<ApplicationUser>()
-   .AddEntityFrameworkStores<ApplicationDbContext>();
-//builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme); // con questo non funziona authorizeView
+//builder.Services
+//   .AddIdentityApiEndpoints<ApplicationUser>()  
+//   .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)   
+    .AddIdentityCookies();
 
-
-builder.Services.AddAuthorization();
 
 
 
@@ -88,6 +87,8 @@ else
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+
 
 
 
@@ -105,6 +106,6 @@ app.MapRazorComponents<App>()
 app.MapAdditionalIdentityEndpoints();
 
 app.MapControllers();
-app.MapGroup("api/account").MapIdentityApi<ApplicationUser>();
+//app.MapGroup("api/account").MapIdentityApi<ApplicationUser>();
 
 app.Run();
