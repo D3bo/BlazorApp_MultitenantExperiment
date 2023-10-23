@@ -2,14 +2,15 @@
 
 @using Microsoft.AspNetCore.Authorization
 
+
 @attribute [Authorize]
-@attribute [RenderModeInteractiveWebAssembly]
+@attribute [RenderModeInteractiveAuto]
 
 <PageTitle>Auth</PageTitle>
 
 <h1>You are authenticated</h1>
 
-<AuthorizeView>
+<AuthorizeView >
     Hello @context.User.Identity?.Name!
     @{
 
