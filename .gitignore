@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/BlazorApp2/BlazorApp2/app.db
+/BlazorApp2/BlazorApp2/app.db-shm
+/BlazorApp2/BlazorApp2/app.db-wal
