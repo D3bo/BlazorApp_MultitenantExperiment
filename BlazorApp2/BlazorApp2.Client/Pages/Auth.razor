@@ -3,7 +3,7 @@
 @using Microsoft.AspNetCore.Authorization
 
 @attribute [Authorize]
-@attribute [RenderModeInteractiveAuto]
+@attribute [RenderModeInteractiveWebAssembly]
 
 <PageTitle>Auth</PageTitle>
 
@@ -11,6 +11,20 @@
 
 <AuthorizeView>
     Hello @context.User.Identity?.Name!
+    @{
+
+    
+    foreach (var claim in context.User.Claims)
+    {
+        <p>@claim.Type: @claim.Value</p>
+    }
+    }
 </AuthorizeView>
+
+@code {
+    //TODO capire perchè scompaionoi i claim
+
+}
+```
 
 
