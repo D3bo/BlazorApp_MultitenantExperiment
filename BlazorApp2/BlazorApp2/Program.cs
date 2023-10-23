@@ -17,18 +17,22 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
+
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<UserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
+
 builder.Services.AddScoped<TenantMiddleware> ();
 builder.Services.AddTransient<IProductServices, ProductServices>();
 
 builder.Services.AddScoped<ITenantService, TenantService>();
 
-builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
-    .AddIdentityCookies();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseSqlite(connectionString));
@@ -42,11 +46,19 @@ builder.Services.AddDbContextFactory<MultipleDbcontext>((sp, op) =>
 });
 
 
-
-
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+//TODO gestire sia authenticazione api che razor
+//builder.Services
+//   .AddIdentityApiEndpoints<ApplicationUser>()  
+//   .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)   
+    .AddIdentityCookies();
+
+
+
+
+builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true) 
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddSignInManager()
@@ -60,6 +72,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+    });
 }
 else
 {
@@ -69,6 +86,11 @@ else
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
+
+
+
 
 app.UseMiddleware<TenantMiddleware>();
 
@@ -84,5 +106,6 @@ app.MapRazorComponents<App>()
 app.MapAdditionalIdentityEndpoints();
 
 app.MapControllers();
+//app.MapGroup("api/account").MapIdentityApi<ApplicationUser>();
 
 app.Run();
