@@ -29,9 +29,9 @@ namespace BlazorApp2.Services
 
         public string GetTenantConnectionString() => Tenant == null ? string.Empty : Tenant.ConnectionString;
 
-        public async Task List<Tenant> GetTenants()
+        public async Task<List<Tenant>> GetTenants()
         {
-            await _applicationDbContext.Tenants.ToListAsync();
+            return await _applicationDbContext.Tenants.ToListAsync();
         }
     }
 
