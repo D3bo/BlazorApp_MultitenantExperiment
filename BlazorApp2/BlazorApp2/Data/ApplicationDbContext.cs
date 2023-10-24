@@ -1,4 +1,5 @@
 using BlazorApp2.Services;
+using BlazorApp2.Shared.Entity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -44,17 +45,24 @@ namespace BlazorApp2.Data
         }
     }
 
-    public class MultipleDbcontext : DbContext
+    public class MultipleDbContext : DbContext
     {
-
-
-        public MultipleDbcontext(DbContextOptions<MultipleDbcontext> options) : base(options)
+        private readonly ITenantService _tenantService;
+        private readonly IConfiguration _configuration;
+        public MultipleDbContext(DbContextOptions<MultipleDbContext> options, ITenantService tenantService, IConfiguration configuration) : base(options)
         {
-
-
+            _tenantService = tenantService;
+            _configuration = configuration;
         }
 
-        DbSet<Customer> Customers { get; set; }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            var tenant = _tenantService.GetTenant();
+            var connectionString = tenant.ConnectionString;
+            optionsBuilder.UseSqlServer(connectionString);
+        }
+
+        public DbSet<Customer> Customers { get; set; }
         
     }
 

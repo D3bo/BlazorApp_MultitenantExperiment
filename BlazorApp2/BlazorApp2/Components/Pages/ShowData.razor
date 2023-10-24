@@ -1,0 +1,49 @@
+﻿@page "/showdata"
+@using BlazorApp2.Shared.Entity
+@using Microsoft.AspNetCore.Authorization
+@attribute [StreamRendering(true)]
+
+@attribute [Authorize]
+
+@inject ICustomerService customerService
+<h3>ShowData</h3>
+
+Diasplay customer data here
+
+@if (customers == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <p><em>There are @customers.Count customers</em></p>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var customer in customers)
+        {
+            <tr>
+                <td>@customer.Id</td>
+                <td>@customer.Name</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+@code {
+    //get customer data from database
+
+    private List<Customer> customers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        customers = await customerService.GetCustomers();
+    }
+
+}

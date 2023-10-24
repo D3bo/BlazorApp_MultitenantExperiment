@@ -26,12 +26,12 @@ namespace BlazorApp2.Services
             {
                     // set the tenant
                     await _tenantService.SetTenant(claim.Value);
-                }
-                else
+            }
+            else
             {
-                    // set the tenant to the default
-                    await _tenantService.SetTenant("default");
-                }
+                // set the tenant to the default
+                await _tenantService.SetTenant("default");
+            }
                 
                 
 

@@ -1,4 +1,5 @@
 ﻿using BlazorApp2.Data;
+using BlazorApp2.Shared.Entity;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlazorApp2.Services

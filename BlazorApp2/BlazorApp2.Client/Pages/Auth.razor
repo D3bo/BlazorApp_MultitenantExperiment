@@ -4,13 +4,13 @@
 
 
 @attribute [Authorize]
-@attribute [RenderModeInteractiveAuto]
+@attribute [RenderModeInteractiveWebAssembly(prerender:false)]
 
 <PageTitle>Auth</PageTitle>
 
 <h1>You are authenticated</h1>
 
-<AuthorizeView>
+<AuthorizeView >
     Hello @context.User.Identity?.Name!
     @{
 

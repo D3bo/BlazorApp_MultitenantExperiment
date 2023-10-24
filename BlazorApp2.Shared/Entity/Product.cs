@@ -1,4 +1,4 @@
-﻿namespace BlazorApp2.Data
+﻿namespace BlazorApp2.Shared.Entity
 {
     public class Product : BaseEntity
     {

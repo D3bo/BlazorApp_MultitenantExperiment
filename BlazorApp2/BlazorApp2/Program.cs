@@ -1,8 +1,10 @@
+using BlazorApp2.Client;
 using BlazorApp2.Client.Pages;
 using BlazorApp2.Components;
 using BlazorApp2.Data;
 using BlazorApp2.Identity;
 using BlazorApp2.Services;
+using BlazorApp2.Shared.Service;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -38,20 +40,22 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(o => o.UseSqlite(connectionString));
 
 builder.Services.AddDbContextFactory<SingleDbContext>(opts => opts.UseSqlite(connectionString), ServiceLifetime.Scoped);
-builder.Services.AddDbContextFactory<MultipleDbcontext>((sp, op) =>
+builder.Services.AddDbContextFactory<MultipleDbContext>((sp, op) =>
 {
     var ts = sp.GetRequiredService<ITenantService>();
     var tenantcs = ts.GetTenantConnectionString();
-    op.UseSqlite(tenantcs);
-});
+    op.UseSqlServer(tenantcs);
+}, ServiceLifetime.Transient);
 
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
 
 //TODO gestire sia authenticazione api che razor
 //builder.Services
 //   .AddIdentityApiEndpoints<ApplicationUser>()  
 //   .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)   
     .AddIdentityCookies();
 
@@ -65,6 +69,11 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender, NoOpEmailSender>();
+
+
+builder.Services.AddTransient<ICustomerService, CustomerService>();
+
+
 
 var app = builder.Build();
 
@@ -86,9 +95,6 @@ else
 }
 
 app.UseHttpsRedirection();
-
-app.UseAuthentication();
-
 
 
 

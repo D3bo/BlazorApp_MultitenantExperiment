@@ -1,5 +1,6 @@
 ﻿using BlazorApp2.Data;
 using BlazorApp2.Services;
+using BlazorApp2.Shared.Entity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
